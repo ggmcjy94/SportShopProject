@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.SportShopProject.repository.mapper.TeamMapper">
+
+    <resultMap type="com.example.SportShopProject.domain.Member" id="resultMember">
+        <id column="id" property="id"/>
+        <id column="email" property="email"/>
+        <id column="name" property="name"/>
+        <id column="address" property="address"/>
+        <id column="shopRole" property="shopRole"/>
+    </resultMap>
+
+    <resultMap type="com.example.SportShopProject.domain.Team" id="TeamMap">
+        <id column="id"           property="id"/>
+        <result column="name"    property="name"/>
+        <collection property="members" columnPrefix="me_" resultMap="resultMember"/>
+    </resultMap>
+
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into team (name) values (#{name})
+    </insert>
+
+    <select id="findAll" resultMap="TeamMap">
+        select
+        t.id, t.name,
+        m.id as me_id, m.email as me_email, m.name as me_name, m.address as me_address, m.shopRole as me_shopRole
+        from team t join member m on t.id = m.team_id
+        order by t.id asc;
+    </select>
+
+    <select id="findById" resultMap="TeamMap">
+        select
+        t.id, t.name,
+        m.id as me_id, m.email as me_email, m.name as me_name, m.address as me_address, m.shopRole as me_shopRole
+        from team t join member m on t.id = m.team_id
+        where t.id = #{id}
+        order by t.id asc;
+    </select>
+</mapper>
